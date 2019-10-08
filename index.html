@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: 30% 30% 30%;
+        grid-column-gap: 5%;
+        grid-row-gap: 20px;
+    }
+
+    .imagem-maximo {
+        max-width: 200px;
+    }
+</style>
+<body>
+    
+    <input type="text" placeholder="Digita o usuario" id="input">
+    <button id="btn" onclick="agoraFoi()">Agora vai</button>
+
+    <div id="minha-div" class="grid">
+
+    </div>
+    <script>
+        let input = document.getElementById("input").value;
+        let btn = document.getElementById("btn");
+
+        let htmlDaDiv = document.getElementById("minha-div").innerHTML;
+
+        async function agoraFoi() {
+            let url = "https://api.github.com/users/" + document.getElementById("input").value;
+            console.log(url);
+             usuario = await fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    addNaDiv(data);
+                })
+
+            
+        }
+
+        function addNaDiv(usuario) {
+            document.getElementById("minha-div").innerHTML += `
+                <div>
+                    <p>${usuario.name}</p>
+                    <img class="imagem-maximo" src="${ usuario.avatar_url }">
+                </div>
+            `
+        }
+        
+    </script>
+</body>
+</html>

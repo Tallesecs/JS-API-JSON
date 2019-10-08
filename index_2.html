@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: 30% 30% 30%;
+        grid-column-gap: 5%;
+        grid-row-gap: 20px;
+        text-align: center;
+    }
+
+    .imagem-maximo {
+        max-width: 200px;
+    }
+
+    .filtro {
+        display: block;
+        margin-top: inherit;
+    }
+</style>
+<body>
+    
+    <input type="text" placeholder="Digite o usuario do github" id="input">
+    <button id="btn" onclick="agoraFoi()">Agora vai</button>
+
+    <input type="text" placeholder="Filtre o usuário" id="filtro" onkeyup="filtrarUsuario();" class="filtro">
+
+
+    <div id="minha-div" class="grid">
+
+    </div>
+    <script>
+        let input = document.getElementById("input");
+        let btn = document.getElementById("btn");
+        let filtro = document.getElementById("filtro");
+
+        let divizinha = document.getElementById("minha-div");
+
+        let usuarios = [];
+        let usuarios_filtrados = [];
+
+        async function agoraFoi() {
+            let url = "https://api.github.com/users/" + input.value;
+
+             let usuario = await fetch(url)
+                .then(response => response.json());
+
+            if (usuario.name != null) {
+                adicionaUsuario(usuario);
+            }
+        }
+
+        function adicionaUsuario(usuario) {
+
+            usuarios.push(usuario);
+            filtro.value = '';
+
+            filtrarUsuario();
+        }
+
+        
+
+        function filtrarUsuario() {
+            
+            let filtro_nome = filtro.value;
+            
+            usuarios_filtrados = usuarios.filter(user => user.name.toUpperCase().includes(filtro.value.toUpperCase()));
+
+            desenhaGrid();
+
+        }
+
+
+
+        function desenhaGrid() {
+
+            divizinha.innerHTML = "";
+
+            for (usuario of usuarios_filtrados) {
+                divizinha.innerHTML += `
+                <div>
+                    <p>${usuario.name}</p>
+                    <img class="imagem-maximo" src="${ usuario.avatar_url }">
+                    <button type="button">Remover</button>
+                </div>
+            `;
+            }
+            
+        }
+        
+    </script>
+</body>
+</html>
